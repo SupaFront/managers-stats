@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = 'https://6230d2cdf113bfceed5c5488.mockapi.io/api/managers';
+axios.defaults.baseURL = 'https://623128a805f5f4d40d749921.mockapi.io/api/managers/';
 
 const path = { MANAGERS: '/managers' };
 
@@ -22,7 +22,7 @@ export const getNotesList = async () => {
   }
 };
 
-export const removeNote = async id => {
+export const removeNote = async ({ id }) => {
   try {
     const { data } = await axios.delete(path.MANAGERS + '/' + id);
     return id;

@@ -1,33 +1,11 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAuthorized } from '../../redux/selectors/opsSelectors';
+import NameSelectAdmin from './NameSelects/NameSelectAdmin';
 
-import { chooseName } from '../../redux/actions';
-
+import NameSelectManager from './NameSelects/NameSelectManager';
 export default function NameSelect() {
-  const dispatch = useDispatch();
-  const [name, setName] = useState('');
-  return (
-    <div>
-      <form
-        onSubmit={e => {
-          e.preventDefault();
-          dispatch(chooseName({ name }));
-        }}
-      >
-        <label htmlFor="">
-          Выберите имя менеджера
-          <select onChange={e => setName(e.target.value)}>
-            <option selected hidden disabled value="">
-              Выберите
-            </option>
-            <option value="Яна">Яна</option>
-            <option value="Людмила">Людмила</option>
-            <option value="Карина 1">Карина 1</option>
-            <option value="Карина 2">Карина 2</option>
-          </select>
-        </label>
-        <button type="submit">Войти</button>
-      </form>
-    </div>
-  );
+  const authorized = useSelector(getAuthorized);
+
+  return <div>{authorized ? <NameSelectAdmin /> : <NameSelectManager />}</div>;
 }
