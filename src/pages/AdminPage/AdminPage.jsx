@@ -3,7 +3,7 @@ import { UploadNote } from '../../API/fetchInfo';
 import AddForm from '../../components/AddForm';
 import ManagersList from '../../components/ManagersList/ManagersList';
 import Auth from '../../components/Auth';
-import { addNote, closeModal } from '../../redux/actions/opsActions';
+import { addNote } from '../../redux/actions/opsActions';
 import { asyncActionCreator } from '../../redux/actions/asyncActionCreator';
 import { addNoteAsyncActions } from '../../redux/actions/noteAsyncActions';
 import { getAuthorized, getManagerName } from '../../redux/selectors/opsSelectors';

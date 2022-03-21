@@ -1,6 +1,5 @@
 import { useSelector } from 'react-redux';
 import './App.css';
-import AddForm from './components/AddForm';
 import ModalConfirm from './components/ModalConfirm';
 import AdminPage from './pages/AdminPage';
 import ManagerPage from './pages/ManagerPage/ManagerPage';

@@ -1,12 +1,5 @@
-import Notiflix from 'notiflix';
-import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  openModal,
-  prepareForDelete,
-  prepareForEdit,
-  toggleModal,
-} from '../../../redux/actions/opsActions';
+import { openModal, prepareForDelete, prepareForEdit } from '../../../redux/actions/opsActions';
 import { getAuthorized } from '../../../redux/selectors/opsSelectors';
 export default function ManagersListItem({ note }) {
   const dispatch = useDispatch();

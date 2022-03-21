@@ -30,6 +30,7 @@ export const opsReducer = (state = initialState, { type, payload }) => {
         ...state,
         isModalOpen: false,
         warningText: '',
+        modalType: '',
       };
     case 'prepareForEdit':
       return {
@@ -45,8 +46,9 @@ export const opsReducer = (state = initialState, { type, payload }) => {
         warningText: `Вы уверены, что хотите удалить запись менеджера ${payload.name} за ${payload.date}?`,
         modalType: 'delete',
       };
-    case 'notes/edit_SUCCESS':
-      return { ...state, name: '' };
+    // case 'notes/edit_SUCCESS':
+    //   return { ...state, name: '' };
+
     default:
       return { ...state };
   }

@@ -50,7 +50,6 @@ export default function ModalConfirm() {
             onClick={() => {
               dispatch(asyncActionCreator(deleteNoteAsyncActions, removeNote, noteforDelete));
               dispatch(closeModal());
-              dispatch(clearPreparedNotes());
             }}
           >
             Да
@@ -58,7 +57,6 @@ export default function ModalConfirm() {
           <button
             onClick={() => {
               dispatch(closeModal());
-              dispatch(clearPreparedNotes());
             }}
           >
             Нет

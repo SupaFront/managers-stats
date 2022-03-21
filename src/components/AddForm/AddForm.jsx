@@ -14,12 +14,6 @@ export default function AddForm({ submitForm }) {
   const [additional, setAdditional] = useState('');
   const noteForEdit = useSelector(getNoteForEdit);
 
-  // useEffect(() => {
-  //   // noteForEdit && noteForEdit.name &&
-  //     dispatch(chooseName({ name: noteForEdit.name }));
-
-  // }, [noteForEdit]);
-
   useEffect(() => {
     if (noteForEdit && result && additional) {
       dispatch(clearPreparedNotes());
@@ -28,17 +22,11 @@ export default function AddForm({ submitForm }) {
     }
   }, [managerName]);
 
-  // const updateState = () => {
-  //   setResult(noteForEdit.result);
-  //   setAdditional(noteForEdit.additional);
-  // };
-
   return (
     <div>
       <form
         onSubmit={e => {
           e.preventDefault();
-          // addNote({ name: managerName, result, additional });
           if (!result) {
             Notiflix.Notify.failure(`Заполните поле 'Результат'!`, 3000);
           } else if (!additional) {
@@ -79,15 +67,3 @@ export default function AddForm({ submitForm }) {
     </div>
   );
 }
-// const mapStateToProps = state => {
-//   return {
-//     result: state.result,
-//     additional: state.additional,
-//   };
-// };
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     add: info => dispatch(addNote(info)),
-//   };
-// };
-// connect(mapStateToProps, mapDispatchToProps)(AddForm);
