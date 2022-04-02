@@ -1,5 +1,7 @@
+import { Container } from '@mui/material';
 import { useSelector } from 'react-redux';
 import './App.css';
+import Header from './components/Header/Header';
 import ModalConfirm from './components/ModalConfirm';
 import AdminPage from './pages/AdminPage';
 import ManagerPage from './pages/ManagerPage/ManagerPage';
@@ -10,9 +12,12 @@ function App() {
 
   return (
     <div className="App">
-      {/* <ManagerPage /> */}
-      <AdminPage />
-      {modalOpen && <ModalConfirm />}
+      <Header />
+      <Container sx={{ mt: '10px' }}>
+        {/* <ManagerPage /> */}
+        <AdminPage />
+        {modalOpen && <ModalConfirm />}
+      </Container>
     </div>
   );
 }

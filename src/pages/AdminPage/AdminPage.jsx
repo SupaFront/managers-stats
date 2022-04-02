@@ -8,6 +8,8 @@ import { asyncActionCreator } from '../../redux/actions/asyncActionCreator';
 import { addNoteAsyncActions } from '../../redux/actions/noteAsyncActions';
 import { getAuthorized, getManagerName } from '../../redux/selectors/opsSelectors';
 import NameSelect from '../../components/NameSelect/NameSelect';
+import Notiflix from 'notiflix';
+import { convertDateToString } from '../../utils/convertDateToString';
 
 export default function AdminPage() {
   const dispatch = useDispatch();
@@ -25,8 +27,8 @@ export default function AdminPage() {
               dispatch(addNote(data));
               dispatch(
                 asyncActionCreator(addNoteAsyncActions, UploadNote, {
-                  name: managerName,
                   ...data,
+                  date: convertDateToString(Date.now()),
                 }),
               );
             }}

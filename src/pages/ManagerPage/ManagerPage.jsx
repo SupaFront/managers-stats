@@ -7,6 +7,7 @@ import { addNoteAsyncActions } from '../../redux/actions/noteAsyncActions';
 import NameSelect from '../../components/NameSelect/NameSelect';
 import { addNote, chooseName } from '../../redux/actions/opsActions';
 import { getManagerName, getSelected } from '../../redux/selectors/opsSelectors';
+import s from './ManagerPage.module.css';
 
 import ManagersList from '../../components/ManagersList/ManagersList';
 
@@ -21,16 +22,18 @@ export default function ManagerPage() {
   }, [dispatch]);
 
   return !managerName && selected ? (
-    <NameSelect />
+    <div className={s.select_container}>
+      <NameSelect />
+    </div>
   ) : (
-    <div>
+    <div className={s.container}>
       <AddForm
         submitForm={data => {
           dispatch(addNote(data));
           dispatch(
             asyncActionCreator(addNoteAsyncActions, UploadNote, {
-              name: managerName,
               ...data,
+              name: managerName,
             }),
           );
         }}

@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import ReactDOM from 'react-dom';
-import { useState } from 'react';
 import Notiflix from 'notiflix';
+import * as yup from 'yup';
 import { getNoteForDelete, getNoteForEdit } from '../../redux/selectors/notesSelectors';
 import { getModalType, getWarningText } from '../../redux/selectors/opsSelectors';
 import { asyncActionCreator } from '../../redux/actions/asyncActionCreator';
@@ -9,6 +9,8 @@ import { editNote, removeNote } from '../../API/fetchInfo';
 import { deleteNoteAsyncActions, editNoteAsyncActions } from '../../redux/actions/noteAsyncActions';
 import { clearPreparedNotes, closeModal } from '../../redux/actions/opsActions';
 import { convertDateToString } from '../../utils/convertDateToString';
+import { Field, Formik } from 'formik';
+import { useState } from 'react';
 
 const modalRoot = document.getElementById('modal-root');
 
@@ -18,24 +20,23 @@ export default function ModalConfirm() {
   const modalType = useSelector(getModalType);
   const noteForEdit = useSelector(getNoteForEdit);
   const noteforDelete = useSelector(getNoteForDelete);
-
-  const [add, setAdd] = useState(noteForEdit.additional);
-  const [res, setRes] = useState('');
   const [question, setQuestion] = useState(false);
+  const validationSchema = yup.object().shape({
+    additional: yup.string().required('Обязательное поле!'),
+    result: yup.string().required('Выберите ответ!'),
+  });
 
-  const checkEditedNote = () => {
+  const checkEditedNote = values => {
+    console.log(values);
     dispatch(
       asyncActionCreator(editNoteAsyncActions, editNote, {
         ...noteForEdit,
-        additional: add,
-        result: res,
+        ...values,
         editDate: convertDateToString(Date.now()),
       }),
     );
     dispatch(closeModal());
     dispatch(clearPreparedNotes());
-    setAdd('');
-    setRes('');
     Notiflix.Notify.success('Изменения успешно сохранены!', 3000);
   };
 
@@ -66,72 +67,82 @@ export default function ModalConfirm() {
     } else if (modalType === 'edit') {
       modalControls = (
         <div>
-          {!question ? (
-            <div>
-              <p>
-                Запись менеджера {noteForEdit.name} за {noteForEdit.date}{' '}
-              </p>
-              <form
-                onSubmit={e => {
-                  e.preventDefault();
-                  if (!res) {
-                    Notiflix.Notify.failure('Заполните поле "Результат"!', 3000);
-                  } else if (!add) {
-                    Notiflix.Notify.failure('Заполните поле "Клиент"!', 3000);
-                  } else {
-                    setQuestion(true);
-                  }
-                }}
-              >
-                <label>
-                  Результат
+          <Formik
+            initialValues={{ additional: noteForEdit.additional, result: '' }}
+            validateOnBlur
+            validationSchema={validationSchema}
+            onSubmit={() => setQuestion(true)}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              dirty,
+              isValid,
+              resetForm,
+            }) =>
+              !question ? (
+                <div>
+                  <label htmlFor="result">Результат</label>
                   <select
+                    name="result"
+                    id="result"
                     defaultValue=""
-                    onChange={e => {
-                      setRes(e.target.value);
-                    }}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
                   >
-                    <option value="" disabled>
+                    <option disabled value="">
                       Выбрать
                     </option>
                     <option value="+">+</option>
                     <option value="-">-</option>
                   </select>
-                </label>
-                <label>
-                  Клиент
-                  <textarea
-                    onChange={e => {
-                      setAdd(e.target.value);
-                    }}
-                    value={add}
+                  {touched.result && errors.result && <p className="errors">{errors.result}</p>}
+                  <label htmlFor="additional">Результат</label>
+                  <Field
                     name="additional"
+                    as="textarea"
                     id="additional"
-                  ></textarea>
-                </label>
-                <button type="submit">Изменить</button>
-              </form>
-            </div>
-          ) : (
-            <div>
-              <p>{warningText}</p>
-              <button
-                onClick={() => {
-                  checkEditedNote();
-                }}
-              >
-                Да
-              </button>
-              <button
-                onClick={() => {
-                  dispatch(closeModal());
-                  dispatch(clearPreparedNotes());
-                }}
-              >
-                Нет
-              </button>
-            </div>
-          )}
+                    value={values.additional}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  ></Field>
+                  {touched.additional && errors.additional && (
+                    <p className="errors">{errors.additional}</p>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={values.result ? !isValid && !dirty : true}
+                    onClick={handleSubmit}
+                  >
+                    Изменить
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  <p>{warningText}</p>
+                  <button
+                    onClick={() => {
+                      checkEditedNote();
+                    }}
+                  >
+                    Да
+                  </button>
+                  <button
+                    onClick={() => {
+                      dispatch(closeModal());
+                      dispatch(clearPreparedNotes());
+                    }}
+                  >
+                    Нет
+                  </button>
+                </div>
+              )
+            }
+          </Formik>
         </div>
       );
     }
