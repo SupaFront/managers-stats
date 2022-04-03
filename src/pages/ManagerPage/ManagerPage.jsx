@@ -4,7 +4,7 @@ import AddForm from '../../components/AddForm';
 import { UploadNote } from '../../API/fetchInfo';
 import { asyncActionCreator } from '../../redux/actions/asyncActionCreator';
 import { addNoteAsyncActions } from '../../redux/actions/noteAsyncActions';
-import NameSelect from '../../components/NameSelect/NameSelect';
+import NameSelectManager from '../../components/NameSelects/NameSelectManager';
 import { addNote, chooseName } from '../../redux/actions/opsActions';
 import { getManagerName, getSelected } from '../../redux/selectors/opsSelectors';
 import s from './ManagerPage.module.css';
@@ -23,7 +23,7 @@ export default function ManagerPage() {
 
   return !managerName && selected ? (
     <div className={s.select_container}>
-      <NameSelect />
+      <NameSelectManager />
     </div>
   ) : (
     <div className={s.container}>

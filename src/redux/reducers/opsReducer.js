@@ -11,8 +11,8 @@ const initialState = {
 
 export const opsReducer = (state = initialState, { type, payload }) => {
   switch (type) {
-    case 'add':
-      return { ...state, ...payload };
+    case 'notes/add_SUCCESS':
+      return { ...state, name: payload.name };
 
     case 'chooseName':
       return { ...state, ...payload, selected: true };

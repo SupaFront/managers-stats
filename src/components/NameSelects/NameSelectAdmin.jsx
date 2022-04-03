@@ -1,14 +1,13 @@
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import { chooseName } from '../../../redux/actions/opsActions';
-import { getManagerName } from '../../../redux/selectors/opsSelectors';
+import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { chooseName } from '../../redux/actions/opsActions';
 
-export default function NameSelect() {
+export default function NameSelectAdmin() {
   const dispatch = useDispatch();
 
   return (
-    <div>
-      <form>
+    <Box>
+      <>
         <FormControl>
           <InputLabel id="select-label">Менеджер</InputLabel>
           <Select
@@ -16,21 +15,21 @@ export default function NameSelect() {
             name="name"
             label="Менеджер"
             id="name"
-            defaultValue=""
-            sx={{ width: '150px', height: '40px' }}
+            defaultValue="Все"
+            sx={{ width: '150px', height: '30px' }}
             onChange={e => {
               e.preventDefault();
-              dispatch(chooseName({ name: e.target.value }));
+              dispatch(chooseName({ name: e.target.value === 'Все' ? '' : e.target.value }));
             }}
           >
-            <MenuItem value="">Все</MenuItem>
+            <MenuItem value="Все">Все</MenuItem>
             <MenuItem value="Яна">Яна</MenuItem>
             <MenuItem value="Людмила">Людмила</MenuItem>
             <MenuItem value="Карина 1">Карина 1</MenuItem>
             <MenuItem value="Карина 2">Карина 2</MenuItem>
           </Select>
         </FormControl>
-      </form>
-    </div>
+      </>
+    </Box>
   );
 }

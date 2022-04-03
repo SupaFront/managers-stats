@@ -1,3 +1,4 @@
+import { Box, Grid, List, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getNotesList } from '../../API/fetchInfo';
@@ -5,6 +6,7 @@ import { asyncActionCreator } from '../../redux/actions/asyncActionCreator';
 import { loadNoteAsyncActions } from '../../redux/actions/noteAsyncActions';
 import { getNotes } from '../../redux/selectors/notesSelectors';
 import { getManagerName } from '../../redux/selectors/opsSelectors';
+import NameSelectAdmin from '../NameSelects/NameSelectAdmin';
 import ManagersListItem from './ManagersListItem';
 
 export default function ManagersList() {
@@ -13,7 +15,7 @@ export default function ManagersList() {
   const managerName = useSelector(getManagerName);
 
   const notesByName = managerName
-    ? notes.length > 0 && notes.filter(note => note.name === managerName)
+    ? notes.length && notes.filter(note => note.name === managerName)
     : notes;
 
   useEffect(() => {
@@ -28,13 +30,51 @@ export default function ManagersList() {
     return result;
   };
   return (
-    <div>
-      <p>Записи менеджера {managerName}</p>
-      <span>Всего:{notesByName ? notesByName.length : 0}</span>
-      {managerName && <span>Конверсия {countConversionPercentage()}%</span>}
-      <ul>
-        {notesByName && notesByName.map(note => <ManagersListItem key={note.id} note={note} />)}
-      </ul>
-    </div>
+    <Box>
+      <Box
+        display={'flex'}
+        justifyContent={'space-between'}
+        alignItems={'center'}
+        sx={{
+          height: '40px',
+
+          padding: '0px 5px 0px 5px',
+        }}
+      >
+        <Typography variant="h6">
+          {managerName ? `Записи менеджера ${managerName}` : 'Все записи'}
+        </Typography>
+        <NameSelectAdmin />
+      </Box>
+      <Box
+        sx={{
+          padding: '0px 5px 0px 5px',
+          color: '#fff',
+          borderRadius: '7px',
+          backgroundColor: '#5cc465',
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Typography variant="h6" component={'span'} sx={{ fontSize: '17px' }}>
+          Всего:{notesByName ? notesByName.length : 0}
+        </Typography>
+        {managerName && (
+          <Typography variant="h6" component={'span'} sx={{ fontSize: '17px' }}>
+            Конверсия {countConversionPercentage()}%
+          </Typography>
+        )}
+      </Box>
+      <List>
+        <Grid container spacing={1}>
+          {notesByName &&
+            notesByName.map(note => (
+              <Grid item xs={6} key={note.id}>
+                <ManagersListItem note={note} />
+              </Grid>
+            ))}
+        </Grid>
+      </List>
+    </Box>
   );
 }

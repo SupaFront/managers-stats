@@ -5,6 +5,9 @@ import { Field, Formik, useFormikContext } from 'formik';
 import * as yup from 'yup';
 
 import { logIn } from '../../redux/actions/opsActions';
+import { Box, Button, FormControl, InputAdornment, TextField, Typography } from '@mui/material';
+import { AccountCircle } from '@mui/icons-material';
+import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 
 const initialState = { login: '', password: '' };
 
@@ -28,7 +31,11 @@ export default function Auth() {
   };
 
   return (
-    <div>
+    <Box
+      display={'flex'}
+      flexDirection={'column'}
+      sx={{ margin: '30px auto 0 auto', width: '300px' }}
+    >
       <Formik
         initialValues={initialState}
         validateOnBlur
@@ -46,44 +53,75 @@ export default function Auth() {
           isValid,
           resetForm,
         }) => (
-          <div className="form">
-            <label htmlFor="login">Логин</label>
-
-            <input
-              type={'text'}
-              name={'login'}
-              id={'login'}
-              value={values.login}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-            {touched.login && errors.login && <p className="errors">{errors.login}</p>}
-            <br />
-            <label htmlFor="password">Пароль</label>
-
-            <input
-              type={'text'}
-              name={'password'}
-              id={'password'}
-              value={values.password}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-            {touched.password && errors.password && <p className="errors">{errors.password}</p>}
-
-            <br />
-            <button
-              disabled={!isValid && !dirty}
+          <>
+            <FormControl sx={{ mb: '15px', position: 'relative' }}>
+              <TextField
+                type={'text'}
+                name={'login'}
+                id={'login'}
+                label={'Логин'}
+                value={values.login}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                variant="standard"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <AccountCircle />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              {touched.login && errors.login && (
+                <Typography
+                  sx={{ position: 'absolute', top: 50, left: 50, fontSize: '15px' }}
+                  color="error"
+                >
+                  {errors.login}
+                </Typography>
+              )}
+            </FormControl>
+            <FormControl sx={{ position: 'relative' }}>
+              <TextField
+                type={'text'}
+                name={'password'}
+                id={'password'}
+                label={'Пароль'}
+                value={values.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                variant="standard"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LockOpenTwoToneIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              {touched.password && errors.password && (
+                <Typography
+                  sx={{ position: 'absolute', top: 50, left: 50, fontSize: '15px' }}
+                  color="error"
+                >
+                  {errors.password}
+                </Typography>
+              )}
+            </FormControl>
+            <Button
+              // disabled={!isValid && !dirty}
               type={'submit'}
               onClick={() => {
                 handleSubmit();
               }}
+              sx={{ mt: '30px' }}
+              variant="contained"
             >
               Войти
-            </button>
-          </div>
+            </Button>
+          </>
         )}
       </Formik>
-    </div>
+    </Box>
   );
 }
