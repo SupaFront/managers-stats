@@ -5,23 +5,20 @@ import * as yup from 'yup';
 import { getNoteForDelete, getNoteForEdit } from '../../redux/selectors/notesSelectors';
 import { getIsModalOpen, getModalType, getWarningText } from '../../redux/selectors/opsSelectors';
 import { asyncActionCreator } from '../../redux/actions/asyncActionCreator';
-import { editNote, removeNote } from '../../API/fetchInfo';
+import { editNote, removeNote } from '../../API/fetchNotes';
 import { deleteNoteAsyncActions, editNoteAsyncActions } from '../../redux/actions/noteAsyncActions';
 import { clearPreparedNotes, closeModal } from '../../redux/actions/opsActions';
 import { convertDateToString } from '../../utils/convertDateToString';
-import { Field, Formik } from 'formik';
+import { Formik } from 'formik';
 import { useState } from 'react';
 import {
   Button,
   FormControl,
   FormControlLabel,
   FormLabel,
-  InputLabel,
-  MenuItem,
   Modal,
   Radio,
   RadioGroup,
-  Select,
   TextField,
   Typography,
 } from '@mui/material';

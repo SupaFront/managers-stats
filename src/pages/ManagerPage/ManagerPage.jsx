@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import AddForm from '../../components/AddForm';
-import { UploadNote } from '../../API/fetchInfo';
+import { UploadNote } from '../../API/fetchNotes';
 import { asyncActionCreator } from '../../redux/actions/asyncActionCreator';
 import { addNoteAsyncActions } from '../../redux/actions/noteAsyncActions';
 import NameSelectManager from '../../components/NameSelects/NameSelectManager';
@@ -33,7 +33,7 @@ export default function ManagerPage() {
           dispatch(
             asyncActionCreator(addNoteAsyncActions, UploadNote, {
               ...data,
-              name: managerName,
+              // name: managerName,
             }),
           );
         }}

@@ -1,9 +1,20 @@
 import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { getManagers } from '../../API/fetchUsers';
+import { asyncActionCreator } from '../../redux/actions/asyncActionCreator';
+import { getManagersAsyncActions } from '../../redux/actions/authAsyncActions';
 import { chooseName } from '../../redux/actions/opsActions';
+import { getManagersList } from '../../redux/selectors/opsSelectors';
 
 export default function NameSelectAdmin() {
   const dispatch = useDispatch();
+  const managers = useSelector(getManagersList);
+
+  useEffect(() => {
+    dispatch(asyncActionCreator(getManagersAsyncActions, getManagers));
+  }, []);
 
   return (
     <Box>
@@ -23,10 +34,16 @@ export default function NameSelectAdmin() {
             }}
           >
             <MenuItem value="Все">Все</MenuItem>
-            <MenuItem value="Яна">Яна</MenuItem>
+            {managers.length &&
+              managers.map(manager => (
+                <MenuItem key={manager._id} value={manager.login}>
+                  {manager.login}
+                </MenuItem>
+              ))}
+            {/* <MenuItem value="Яна">Яна</MenuItem>
             <MenuItem value="Людмила">Людмила</MenuItem>
             <MenuItem value="Карина 1">Карина 1</MenuItem>
-            <MenuItem value="Карина 2">Карина 2</MenuItem>
+            <MenuItem value="Карина 2">Карина 2</MenuItem> */}
           </Select>
         </FormControl>
       </>

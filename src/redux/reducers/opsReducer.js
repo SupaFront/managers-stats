@@ -7,12 +7,13 @@ const initialState = {
   isModalOpen: false,
   warningText: '',
   modalType: null,
+  managers: [],
 };
 
 export const opsReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case 'notes/add_SUCCESS':
-      return { ...state, name: payload.name };
+      return { ...state };
 
     case 'chooseName':
       return { ...state, ...payload, selected: true };
@@ -35,7 +36,7 @@ export const opsReducer = (state = initialState, { type, payload }) => {
     case 'prepareForEdit':
       return {
         ...state,
-        warningText: `Вы уверены, что хотите изменить запись менеджера ${payload.name} за ${payload.date}?`,
+        warningText: `Вы уверены, что хотите изменить запись менеджера ${payload.owner.login} за ${payload.createdAt}?`,
         modalType: 'edit',
         name: payload.name,
       };
@@ -43,11 +44,17 @@ export const opsReducer = (state = initialState, { type, payload }) => {
     case 'prepareForDelete':
       return {
         ...state,
-        warningText: `Вы уверены, что хотите удалить запись менеджера ${payload.name} за ${payload.date}?`,
+        warningText: `Вы уверены, что хотите удалить запись менеджера ${payload.owner.login} за ${payload.createdAt}?`,
         modalType: 'delete',
       };
-    // case 'notes/edit_SUCCESS':
-    //   return { ...state, name: '' };
+
+    case 'users/getManagers_START':
+      return { ...state, isLoading: true, error: null };
+
+    case 'users/getManagers_SUCCESS':
+      return { ...state, isLoading: false, error: null, managers: payload };
+    case 'users/getManagers_FAILURE':
+      return { ...state, isLoading: false, error: payload };
 
     default:
       return { ...state };

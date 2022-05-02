@@ -1,25 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import firebase from 'firebase/app';
-import { initializeApp } from 'firebase/app';
+import { PersistGate } from 'redux-persist/integration/react';
 import './index.css';
 import App from './App';
 
 import reportWebVitals from './reportWebVitals';
-import store from './redux/store';
+import { store, persistor } from './redux/store';
 import { createTheme, ThemeProvider } from '@mui/material';
-
-const firebaseConfig = {
-  apiKey: 'AIzaSyCKlGcRJ7n1xbLnIGQObIiGanICztxmuG4',
-  authDomain: 'managerz-ob.firebaseapp.com',
-  projectId: 'managerz-ob',
-  storageBucket: 'managerz-ob.appspot.com',
-  messagingSenderId: '639216437398',
-  appId: '1:639216437398:web:54a07f1cdee98766a65ab7',
-  measurementId: 'G-MDRHJ624H3',
-};
-initializeApp(firebaseConfig);
 
 const theme = createTheme({
   palette: {
@@ -41,9 +29,11 @@ const theme = createTheme({
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
+      <PersistGate persistor={persistor} loading={null}>
+        <ThemeProvider theme={theme}>
+          <App />
+        </ThemeProvider>
+      </PersistGate>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root'),

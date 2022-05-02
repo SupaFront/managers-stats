@@ -1,7 +1,7 @@
 import { Box, Grid, List, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getNotesList } from '../../API/fetchInfo';
+import { getNotesList } from '../../API/fetchNotes';
 import { asyncActionCreator } from '../../redux/actions/asyncActionCreator';
 import { loadNoteAsyncActions } from '../../redux/actions/noteAsyncActions';
 import { getNotes } from '../../redux/selectors/notesSelectors';
@@ -37,7 +37,6 @@ export default function ManagersList() {
         alignItems={'center'}
         sx={{
           height: '40px',
-
           padding: '0px 5px 0px 5px',
         }}
       >
@@ -69,7 +68,7 @@ export default function ManagersList() {
         <Grid container spacing={1}>
           {notesByName &&
             notesByName.map(note => (
-              <Grid item xs={6} key={note.id}>
+              <Grid item xs={6} key={note._id}>
                 <ManagersListItem note={note} />
               </Grid>
             ))}

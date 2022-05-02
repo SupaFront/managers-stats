@@ -4,17 +4,19 @@ import { useDispatch } from 'react-redux';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { openModal, prepareForDelete, prepareForEdit } from '../../../redux/actions/opsActions';
+import { useEffect } from 'react';
 
 export default function ManagersListItem({ note }) {
   const dispatch = useDispatch();
 
+  useEffect(() => console.log(note));
   return (
     <ListItem sx={{ padding: 0 }}>
       <Card key={note.id} sx={{ width: '100%' }}>
         <CardContent sx={{ padding: '5px' }}>
           <Box display={'flex'} flexDirection={'column'} alignItems={'flex-start'} width={'100%'}>
             <Typography variant="h6" component="h6">
-              {note && note.name}
+              {note && note.owner?.login}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               <b>Результат: </b> {note && note.result}
@@ -46,7 +48,7 @@ export default function ManagersListItem({ note }) {
           <Box height={'34px'} display={'flex'} flexDirection={'column'} justifyContent={'center'}>
             {note.date && (
               <Typography sx={{ fontSize: '12px', fontWeight: 700 }} color="text.secondary">
-                Создана {note.date}
+                Создана {note.createdAt}
               </Typography>
             )}
             {note.editDate && (
@@ -55,7 +57,7 @@ export default function ManagersListItem({ note }) {
                 variant="body2"
                 color="text.secondary"
               >
-                Последнее изменение {note.editDate && note.editDate}
+                Последнее изменение {note.editedAT && note.editedAt}
               </Typography>
             )}
           </Box>

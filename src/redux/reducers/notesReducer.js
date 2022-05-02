@@ -24,7 +24,7 @@ export const notesAsyncReducer = (state = initialState, { type, payload }) => {
         ...state,
         noteForDelete: null,
         noteForEdit: null,
-        notes: state.notes.length > 0 && state.notes.filter(note => note.id !== payload),
+        notes: state.notes.length > 0 && state.notes.filter(note => note._id !== payload),
       };
 
     case 'notes/edit_SUCCESS':
@@ -32,7 +32,7 @@ export const notesAsyncReducer = (state = initialState, { type, payload }) => {
         ...state,
         notes:
           state.notes.length > 0 &&
-          state.notes.map(note => (note.id === payload.id ? payload : note)),
+          state.notes.map(note => (note._id === payload._id ? payload : note)),
       };
     default:
       return { ...state };

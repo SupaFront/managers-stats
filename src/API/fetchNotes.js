@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = 'https://623128a805f5f4d40d749921.mockapi.io/api/managers/';
+axios.defaults.baseURL = 'http://localhost:3000/api/';
 
-const path = { MANAGERS: '/managers' };
+const path = { notes: '/notes' };
 
 export const UploadNote = async note => {
   try {
-    const { data } = await axios.post(path.MANAGERS, note);
+    const { data } = await axios.post(path.notes, note);
     return data;
   } catch (err) {
     throw err.message;
@@ -15,17 +15,17 @@ export const UploadNote = async note => {
 
 export const getNotesList = async () => {
   try {
-    const { data } = await axios.get(path.MANAGERS);
+    const { data } = await axios.get(path.notes);
     return data;
   } catch (err) {
     throw err.message;
   }
 };
 
-export const removeNote = async ({ id }) => {
+export const removeNote = async ({ _id }) => {
   try {
-    const { data } = await axios.delete(path.MANAGERS + '/' + id);
-    return id;
+    const { data } = await axios.delete(path.notes + '/' + _id);
+    return _id;
   } catch (err) {
     throw err.message;
   }
@@ -34,7 +34,7 @@ export const removeNote = async ({ id }) => {
 export const editNote = async props => {
   const { id } = props;
   try {
-    const { data } = await axios.put(path.MANAGERS + '/' + id, props);
+    const { data } = await axios.put(path.notes + '/' + id, props);
     return data;
   } catch (err) {
     throw err.message;

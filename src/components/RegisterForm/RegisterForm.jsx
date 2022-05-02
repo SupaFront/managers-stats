@@ -2,34 +2,27 @@ import { useDispatch } from 'react-redux';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
-import { loginUserAsyncActions } from '../../redux/actions/authAsyncActions';
 import { Box, Button, FormControl, InputAdornment, TextField, Typography } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import { asyncActionCreator } from '../../redux/actions/asyncActionCreator';
-import { loginUser } from '../../API/fetchUsers';
+import { registerUser } from '../../API/fetchUsers';
+import { registerUserAsyncActions } from '../../redux/actions/authAsyncActions';
 
 const emailRegexp = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-const initialState = { email: '', password: '' };
+const initialState = { login: '', password: '' };
 
 const validationSchema = yup.object().shape({
-  email: yup.string().matches(emailRegexp, 'Неверный формат!').required('Обязательное поле!'),
+  login: yup.string().required('Обязательное поле!'),
   password: yup
     .string()
     .length()
     .test('length', 'Минимум 8 символов!', val => val && val.length >= 8)
     .required('Обязательное поле!'),
+  email: yup.string().matches(emailRegexp, 'Неверный формат!').required('Обязательное поле!'),
 });
-export default function Auth() {
+export default function RegisterForm() {
   const dispatch = useDispatch();
-
-  // const checkUser = ({ login, password }) => {
-  //   if (login === 'admin' && password === 'organicbud228') {
-  //     dispatch(logIn());
-  //   } else {
-  //     Notiflix.Notify.failure('Неверный логин или пароль!', 5000);
-  //   }
-  // };
 
   return (
     <Box
@@ -41,7 +34,9 @@ export default function Auth() {
         initialValues={initialState}
         validateOnBlur
         validationSchema={validationSchema}
-        onSubmit={values => dispatch(asyncActionCreator(loginUserAsyncActions, loginUser, values))}
+        onSubmit={values =>
+          dispatch(asyncActionCreator(registerUserAsyncActions, registerUser, values))
+        }
       >
         {({
           values,
@@ -55,6 +50,7 @@ export default function Auth() {
           resetForm,
         }) => (
           <>
+            {' '}
             <FormControl sx={{ mb: '15px', position: 'relative' }}>
               <TextField
                 type={'text'}
@@ -78,7 +74,34 @@ export default function Auth() {
                   sx={{ position: 'absolute', top: 50, left: 50, fontSize: '15px' }}
                   color="error"
                 >
-                  {errors.email}
+                  {errors.login}
+                </Typography>
+              )}
+            </FormControl>
+            <FormControl sx={{ mb: '15px', position: 'relative' }}>
+              <TextField
+                type={'text'}
+                name={'login'}
+                id={'login'}
+                label={'Логин'}
+                value={values.login}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                variant="standard"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <AccountCircle />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              {touched.login && errors.login && (
+                <Typography
+                  sx={{ position: 'absolute', top: 50, left: 50, fontSize: '15px' }}
+                  color="error"
+                >
+                  {errors.login}
                 </Typography>
               )}
             </FormControl>
@@ -117,7 +140,7 @@ export default function Auth() {
               sx={{ mt: '30px' }}
               variant="contained"
             >
-              Войти
+              Зарегистрировать
             </Button>
           </>
         )}

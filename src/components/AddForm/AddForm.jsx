@@ -1,8 +1,8 @@
 import SaveIcon from '@mui/icons-material/Save';
-import { Field, Formik } from 'formik';
+import { Formik } from 'formik';
 import * as yup from 'yup';
 import { useSelector } from 'react-redux';
-import { getAuthorized } from '../../redux/selectors/opsSelectors';
+import { getAuthorized, getManagersList } from '../../redux/selectors/opsSelectors';
 import {
   Box,
   Button,
@@ -17,15 +17,18 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { getUserRole } from '../../redux/selectors/authSelectors';
 
 export default function AddForm({ submitForm }) {
-  const authorized = useSelector(getAuthorized);
+  const role = useSelector(getUserRole);
+  const managers = useSelector(getManagersList);
 
   const validationSchema = yup.object().shape({
     additional: yup.string().required('Обязательное поле!'),
     result: yup.string().required('Выберите ответ!'),
-    name: yup.string().required('Выберите Менеджера!'),
+    owner: yup.string().required('Выберите Менеджера!'),
   });
+
   return (
     <Box
       sx={{
@@ -35,7 +38,7 @@ export default function AddForm({ submitForm }) {
       }}
     >
       <Formik
-        initialValues={{ additional: '', result: '', name: '' }}
+        initialValues={{ additional: '', result: '', owner: '' }}
         validateOnBlur
         validationSchema={validationSchema}
         onSubmit={(values, { resetForm }) => {
@@ -105,25 +108,27 @@ export default function AddForm({ submitForm }) {
               flexDirection={'column'}
               justifyContent={'space-between'}
             >
-              {authorized && (
+              {role === 'admin' && (
                 <>
                   <FormControl sx={{ position: 'relative', mt: '15px' }}>
                     <InputLabel id="select-label">Имя</InputLabel>
                     <Select
                       labelId="select-label"
-                      name="name"
-                      value={values.name}
-                      id="name"
+                      name="owner"
+                      value={values.owner}
+                      id="owner"
                       label="Имя"
                       sx={{ width: '150px', height: '40px' }}
                       onChange={handleChange}
                     >
-                      <MenuItem value="Яна">Яна</MenuItem>
-                      <MenuItem value="Людмила">Людмила</MenuItem>
-                      <MenuItem value="Карина 1">Карина 1</MenuItem>
-                      <MenuItem value="Карина 2">Карина 2</MenuItem>
+                      {managers.length &&
+                        managers.map(manager => (
+                          <MenuItem key={manager._id} value={manager._id}>
+                            {manager.login}
+                          </MenuItem>
+                        ))}
                     </Select>
-                    {touched.name && errors.name && (
+                    {touched.owner && errors.owner && (
                       <Typography
                         sx={{
                           position: 'absolute',
@@ -133,7 +138,7 @@ export default function AddForm({ submitForm }) {
                         }}
                         color="error"
                       >
-                        {errors.name}
+                        {errors.owner}
                       </Typography>
                     )}{' '}
                   </FormControl>
