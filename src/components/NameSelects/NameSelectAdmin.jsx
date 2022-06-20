@@ -1,20 +1,17 @@
 import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { useEffect } from 'react';
-
 import { useDispatch, useSelector } from 'react-redux';
-import { getManagers } from '../../API/fetchUsers';
-import { asyncActionCreator } from '../../redux/actions/asyncActionCreator';
-import { getManagersAsyncActions } from '../../redux/actions/authAsyncActions';
-import { chooseName } from '../../redux/actions/opsActions';
-import { getManagersList } from '../../redux/selectors/opsSelectors';
+import { getManagersAsyncActions } from '../../redux/actions/auth-async-actions';
+import { chooseName } from '../../redux/actions/ops-actions';
+import { getManagersList } from '../../redux/selectors/ops-selectors';
 
 export default function NameSelectAdmin() {
   const dispatch = useDispatch();
   const managers = useSelector(getManagersList);
 
   useEffect(() => {
-    dispatch(asyncActionCreator(getManagersAsyncActions, getManagers));
-  }, []);
+    dispatch(getManagersAsyncActions());
+  }, [dispatch]);
 
   return (
     <Box>
@@ -27,7 +24,7 @@ export default function NameSelectAdmin() {
             label="Менеджер"
             id="name"
             defaultValue="Все"
-            sx={{ width: '150px', height: '30px' }}
+            sx={{ width: '150px', height: '56px' }}
             onChange={e => {
               e.preventDefault();
               dispatch(chooseName({ name: e.target.value === 'Все' ? '' : e.target.value }));
@@ -40,10 +37,6 @@ export default function NameSelectAdmin() {
                   {manager.login}
                 </MenuItem>
               ))}
-            {/* <MenuItem value="Яна">Яна</MenuItem>
-            <MenuItem value="Людмила">Людмила</MenuItem>
-            <MenuItem value="Карина 1">Карина 1</MenuItem>
-            <MenuItem value="Карина 2">Карина 2</MenuItem> */}
           </Select>
         </FormControl>
       </>

@@ -1,16 +1,13 @@
 import { useDispatch } from 'react-redux';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-
 import { Box, Button, FormControl, InputAdornment, TextField, Typography } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
-import { asyncActionCreator } from '../../redux/actions/asyncActionCreator';
-import { registerUser } from '../../API/fetchUsers';
-import { registerUserAsyncActions } from '../../redux/actions/authAsyncActions';
+import { registerUserAsyncActions } from '../../redux/actions/auth-async-actions';
 
 const emailRegexp = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-const initialState = { login: '', password: '' };
+const initialState = { login: '', password: '', email: '' };
 
 const validationSchema = yup.object().shape({
   login: yup.string().required('Обязательное поле!'),
@@ -34,9 +31,11 @@ export default function RegisterForm() {
         initialValues={initialState}
         validateOnBlur
         validationSchema={validationSchema}
-        onSubmit={values =>
-          dispatch(asyncActionCreator(registerUserAsyncActions, registerUser, values))
-        }
+        onSubmit={(values, { resetForm }) => {
+          console.log(values);
+          dispatch(registerUserAsyncActions(values));
+          resetForm();
+        }}
       >
         {({
           values,
@@ -50,7 +49,6 @@ export default function RegisterForm() {
           resetForm,
         }) => (
           <>
-            {' '}
             <FormControl sx={{ mb: '15px', position: 'relative' }}>
               <TextField
                 type={'text'}
@@ -133,7 +131,7 @@ export default function RegisterForm() {
               )}
             </FormControl>
             <Button
-              type={'submit'}
+              type="button"
               onClick={() => {
                 handleSubmit();
               }}

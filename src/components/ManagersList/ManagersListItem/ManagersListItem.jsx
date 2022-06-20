@@ -3,13 +3,12 @@ import { Box } from '@mui/system';
 import { useDispatch } from 'react-redux';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import { openModal, prepareForDelete, prepareForEdit } from '../../../redux/actions/opsActions';
-import { useEffect } from 'react';
+import { openModal, prepareForDelete, prepareForEdit } from '../../../redux/actions/ops-actions';
+import { convertDateToString } from '../../../utils/convertDateToString';
 
 export default function ManagersListItem({ note }) {
   const dispatch = useDispatch();
 
-  useEffect(() => console.log(note));
   return (
     <ListItem sx={{ padding: 0 }}>
       <Card key={note.id} sx={{ width: '100%' }}>
@@ -46,18 +45,18 @@ export default function ManagersListItem({ note }) {
           }}
         >
           <Box height={'34px'} display={'flex'} flexDirection={'column'} justifyContent={'center'}>
-            {note.date && (
+            {note.createdAt && (
               <Typography sx={{ fontSize: '12px', fontWeight: 700 }} color="text.secondary">
-                Создана {note.createdAt}
+                Создана: {convertDateToString(note.createdAt)}
               </Typography>
             )}
-            {note.editDate && (
+            {note.updatedAt && (
               <Typography
                 sx={{ fontSize: '12px', fontWeight: 700 }}
                 variant="body2"
                 color="text.secondary"
               >
-                Последнее изменение {note.editedAT && note.editedAt}
+                Последнее изменение: {convertDateToString(note.updatedAt)}
               </Typography>
             )}
           </Box>

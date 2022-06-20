@@ -1,4 +1,10 @@
-import { setToken, unsetToken } from '../../utils/tokenActs';
+import Notiflix from 'notiflix';
+import {
+  getCurrentUserTypes,
+  loginUserTypes,
+  logOutUserTypes,
+  registerUserTypes,
+} from '../actions/action-types/auth-types';
 
 const initialState = {
   login: '',
@@ -14,19 +20,19 @@ const initialState = {
 
 export const usersAsyncReducer = (state = initialState, { type, payload }) => {
   switch (type) {
-    case 'users/register_START':
+    case registerUserTypes.PENDING:
       return { ...state, isLoading: true, error: null };
 
-    case 'users/register_SUCCESS':
+    case registerUserTypes.FULFILLED:
+      Notiflix.Notify.success('Пользователь успешно зарегистрирован!');
       return { ...state, message: 'Registered', isLoading: false };
-    case 'users/register_FAILURE':
+    case registerUserTypes.REJECTED:
       return { ...state, isLoading: false, error: payload };
 
-    case 'users/login_START':
+    case loginUserTypes.PENDING:
       return { ...state, isLoading: true, error: null };
 
-    case 'users/login_SUCCESS':
-      setToken(payload.token);
+    case loginUserTypes.FULFILLED:
       return {
         ...state,
         login: payload.login,
@@ -36,21 +42,21 @@ export const usersAsyncReducer = (state = initialState, { type, payload }) => {
         id: payload._id,
         token: payload.token,
       };
-    case 'users/login_FAILURE':
+    case loginUserTypes.REJECTED:
+      Notiflix.Notify.failure('Неверный логин или пароль!');
       return { ...state, isLoading: false, error: payload };
 
-    case 'users/logout_START':
+    case logOutUserTypes.PENDING:
       return { ...state, isLoading: true, error: null };
 
-    case 'users/logout_SUCCESS':
-      unsetToken();
+    case logOutUserTypes.FULFILLED:
       return { initialState };
-    case 'users/logout_FAILURE':
+    case logOutUserTypes.REJECTED:
       return { ...state, isLoading: false, error: payload };
 
-    case 'users/getCurrent_START':
+    case getCurrentUserTypes.PENDING:
       return { ...state, isLoading: true, error: null };
-    case 'users/getCurrent_SUCCESS':
+    case getCurrentUserTypes.FULFILLED:
       return {
         ...state,
         login: payload.login,
@@ -59,10 +65,9 @@ export const usersAsyncReducer = (state = initialState, { type, payload }) => {
         authorized: true,
         id: payload._id,
       };
-    case 'users/getCurrent_FAILURE':
+    case getCurrentUserTypes.REJECTED:
       return { ...state, isLoading: false, error: payload };
 
-   
     default:
       return { ...state };
   }

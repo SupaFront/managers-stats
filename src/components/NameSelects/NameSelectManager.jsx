@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { chooseName } from '../../redux/actions/opsActions';
+import { chooseName } from '../../redux/actions/ops-actions';
 import s from './NameSelectManager.module.css';
 
 export default function NameSelectManager() {

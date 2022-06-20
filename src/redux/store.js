@@ -3,9 +3,9 @@ import { devToolsEnhancer } from '@redux-devtools/extension';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import thunk from 'redux-thunk';
-import { opsReducer } from './reducers/opsReducer';
-import { notesAsyncReducer } from './reducers/notesReducer';
-import { usersAsyncReducer } from './reducers/authReducer';
+import { opsReducer } from './reducers/ops-reducer';
+import { notesAsyncReducer } from './reducers/notes-reducer';
+import { usersAsyncReducer } from './reducers/auth-reducer';
 
 const composedEnhancer = compose(applyMiddleware(thunk), devToolsEnhancer());
 

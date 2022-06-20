@@ -2,7 +2,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { useSelector } from 'react-redux';
-import { getAuthorized, getManagersList } from '../../redux/selectors/opsSelectors';
+import { getManagersList } from '../../redux/selectors/ops-selectors';
 import {
   Box,
   Button,
@@ -17,17 +17,17 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { getUserRole } from '../../redux/selectors/authSelectors';
+import { getUserRole } from '../../redux/selectors/auth-selectors';
+
+const validationSchema = yup.object().shape({
+  additional: yup.string().required('Обязательное поле!'),
+  result: yup.string().required('Выберите ответ!'),
+  owner: yup.string().required('Выберите Менеджера!'),
+});
 
 export default function AddForm({ submitForm }) {
   const role = useSelector(getUserRole);
   const managers = useSelector(getManagersList);
-
-  const validationSchema = yup.object().shape({
-    additional: yup.string().required('Обязательное поле!'),
-    result: yup.string().required('Выберите ответ!'),
-    owner: yup.string().required('Выберите Менеджера!'),
-  });
 
   return (
     <Box

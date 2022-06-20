@@ -1,44 +1,24 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import AddForm from '../../components/AddForm';
-import { UploadNote } from '../../API/fetchNotes';
-import { asyncActionCreator } from '../../redux/actions/asyncActionCreator';
-import { addNoteAsyncActions } from '../../redux/actions/noteAsyncActions';
-import NameSelectManager from '../../components/NameSelects/NameSelectManager';
-import { addNote, chooseName } from '../../redux/actions/opsActions';
-import { getManagerName, getSelected } from '../../redux/selectors/opsSelectors';
-import s from './ManagerPage.module.css';
-
+import { addNoteAsyncActions } from '../../redux/actions/notes-async-actions';
 import ManagersList from '../../components/ManagersList/ManagersList';
+import { Box } from '@mui/material';
 
 export default function ManagerPage() {
   const dispatch = useDispatch();
 
-  const managerName = useSelector(getManagerName);
-  const selected = useSelector(getSelected);
-
-  useEffect(() => {
-    !selected && dispatch(chooseName({ name: '' }));
-  }, [dispatch]);
-
-  return !managerName && selected ? (
-    <div className={s.select_container}>
-      <NameSelectManager />
-    </div>
-  ) : (
-    <div className={s.container}>
+  return (
+    <Box>
       <AddForm
         submitForm={data => {
-          dispatch(addNote(data));
           dispatch(
-            asyncActionCreator(addNoteAsyncActions, UploadNote, {
+            addNoteAsyncActions({
               ...data,
-              // name: managerName,
             }),
           );
         }}
       />
       <ManagersList />
-    </div>
+    </Box>
   );
 }

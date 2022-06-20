@@ -2,12 +2,10 @@ import { useDispatch } from 'react-redux';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
-import { loginUserAsyncActions } from '../../redux/actions/authAsyncActions';
+import { loginUserAsyncActions } from '../../redux/actions/auth-async-actions';
 import { Box, Button, FormControl, InputAdornment, TextField, Typography } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
-import { asyncActionCreator } from '../../redux/actions/asyncActionCreator';
-import { loginUser } from '../../API/fetchUsers';
 
 const emailRegexp = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 const initialState = { email: '', password: '' };
@@ -23,14 +21,6 @@ const validationSchema = yup.object().shape({
 export default function Auth() {
   const dispatch = useDispatch();
 
-  // const checkUser = ({ login, password }) => {
-  //   if (login === 'admin' && password === 'organicbud228') {
-  //     dispatch(logIn());
-  //   } else {
-  //     Notiflix.Notify.failure('Неверный логин или пароль!', 5000);
-  //   }
-  // };
-
   return (
     <Box
       display={'flex'}
@@ -41,7 +31,7 @@ export default function Auth() {
         initialValues={initialState}
         validateOnBlur
         validationSchema={validationSchema}
-        onSubmit={values => dispatch(asyncActionCreator(loginUserAsyncActions, loginUser, values))}
+        onSubmit={values => dispatch(loginUserAsyncActions(values))}
       >
         {({
           values,

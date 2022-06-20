@@ -2,12 +2,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import ReactDOM from 'react-dom';
 import Notiflix from 'notiflix';
 import * as yup from 'yup';
-import { getNoteForDelete, getNoteForEdit } from '../../redux/selectors/notesSelectors';
-import { getIsModalOpen, getModalType, getWarningText } from '../../redux/selectors/opsSelectors';
-import { asyncActionCreator } from '../../redux/actions/asyncActionCreator';
-import { editNote, removeNote } from '../../API/fetchNotes';
-import { deleteNoteAsyncActions, editNoteAsyncActions } from '../../redux/actions/noteAsyncActions';
-import { clearPreparedNotes, closeModal } from '../../redux/actions/opsActions';
+import { getNoteForDelete, getNoteForEdit } from '../../redux/selectors/notes-selectors';
+import { getIsModalOpen, getModalType, getWarningText } from '../../redux/selectors/ops-selectors';
+import {
+  deleteNoteAsyncActions,
+  editNoteAsyncActions,
+} from '../../redux/actions/notes-async-actions';
+import { closeModal } from '../../redux/actions/ops-actions';
 import { convertDateToString } from '../../utils/convertDateToString';
 import { Formik } from 'formik';
 import { useState } from 'react';
@@ -27,6 +28,11 @@ import SaveIcon from '@mui/icons-material/Save';
 
 const modalRoot = document.getElementById('modal-root');
 
+const validationSchema = yup.object().shape({
+  additional: yup.string().required('Обязательное поле!'),
+  result: yup.string().required('Выберите ответ!'),
+});
+
 export default function ModalConfirm() {
   const dispatch = useDispatch();
   const warningText = useSelector(getWarningText);
@@ -36,21 +42,16 @@ export default function ModalConfirm() {
   const isModalOpen = useSelector(getIsModalOpen);
   const [question, setQuestion] = useState(false);
   const [values, setValues] = useState(null);
-  const validationSchema = yup.object().shape({
-    additional: yup.string().required('Обязательное поле!'),
-    result: yup.string().required('Выберите ответ!'),
-  });
 
   const checkEditedNote = () => {
     dispatch(
-      asyncActionCreator(editNoteAsyncActions, editNote, {
+      editNoteAsyncActions({
         ...noteForEdit,
         ...values,
-        editDate: convertDateToString(Date.now()),
+        owner: noteForEdit.owner._id,
       }),
     );
     dispatch(closeModal());
-    dispatch(clearPreparedNotes());
     Notiflix.Notify.info('Изменения сохранены!', 3000);
   };
 
@@ -87,7 +88,7 @@ export default function ModalConfirm() {
                 variant="contained"
                 color="success"
                 onClick={() => {
-                  dispatch(asyncActionCreator(deleteNoteAsyncActions, removeNote, noteforDelete));
+                  dispatch(deleteNoteAsyncActions(noteforDelete));
                   dispatch(closeModal());
                 }}
               >
@@ -224,7 +225,6 @@ export default function ModalConfirm() {
                         color="error"
                         onClick={() => {
                           dispatch(closeModal());
-                          dispatch(clearPreparedNotes());
                         }}
                       >
                         Нет

@@ -1,26 +1,30 @@
 import { Box, Grid, List, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getNotesList } from '../../API/fetchNotes';
-import { asyncActionCreator } from '../../redux/actions/asyncActionCreator';
-import { loadNoteAsyncActions } from '../../redux/actions/noteAsyncActions';
-import { getNotes } from '../../redux/selectors/notesSelectors';
-import { getManagerName } from '../../redux/selectors/opsSelectors';
+import { loadNotesAsyncActions } from '../../redux/actions/notes-async-actions';
+import { getNotes } from '../../redux/selectors/notes-selectors';
+import { getManagerName } from '../../redux/selectors/ops-selectors';
+import getCurrentDates from '../../utils/getCurrentDates';
+import MonthPicker from '../MonthPicker';
 import NameSelectAdmin from '../NameSelects/NameSelectAdmin';
 import ManagersListItem from './ManagersListItem';
+
+const range = {
+  min: { year: 2022, month: 1 },
+  max: { year: 2030, month: 1 },
+};
 
 export default function ManagersList() {
   const dispatch = useDispatch();
   const notes = useSelector(getNotes);
   const managerName = useSelector(getManagerName);
+  useEffect(() => {
+    dispatch(loadNotesAsyncActions(getCurrentDates()));
+  }, [dispatch]);
 
   const notesByName = managerName
-    ? notes.length && notes.filter(note => note.name === managerName)
+    ? notes.length && notes.filter(note => note.owner.login === managerName)
     : notes;
-
-  useEffect(() => {
-    dispatch(asyncActionCreator(loadNoteAsyncActions, getNotesList));
-  }, [dispatch]);
 
   const countConversionPercentage = () => {
     const good = notesByName.filter(note => note.result === '+').length;
@@ -36,13 +40,15 @@ export default function ManagersList() {
         justifyContent={'space-between'}
         alignItems={'center'}
         sx={{
-          height: '40px',
+          height: '70px',
           padding: '0px 5px 0px 5px',
+          margin: '10px 0 5px',
         }}
       >
-        <Typography variant="h6">
+        <Typography variant="h4">
           {managerName ? `Записи менеджера ${managerName}` : 'Все записи'}
         </Typography>
+        <MonthPicker range={range} />
         <NameSelectAdmin />
       </Box>
       <Box
